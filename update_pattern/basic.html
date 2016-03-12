@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+    text {
+        font: bold 48px monospace;
+    }
+
+    .enter {
+        fill: green;
+    }
+
+    .update {
+        fill: #333;
+    }
+
+</style>
+<body>
+<script src="//d3js.org/d3.v3.min.js"></script>
+<script src="../d3bind/d3bind.js"></script>
+<script>
+
+    var alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
+
+    var width = 960,
+        height = 500;
+
+    var svg = d3bind.select("body").append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .append("g")
+            .attr("transform", "translate(32," + (height / 2) + ")");
+
+    var initValue = d3.shuffle(alphabet).slice(0, 10).sort();
+    var data = new d3bind.ObservableArray(initValue);
+    var $update = new d3bind.ObservableValue();
+
+    svg.bindRepeat(data, function(d, $i) {
+        this.append("text")
+            .attr("dy", ".35em")
+            .text(d)
+            .bindAttr("x", $i, function(i) { return i * 32; })
+            .bindAttr("class", $update, function() { return "update"; })
+            .attr("class", "enter");
+    });
+
+    setInterval(function() {
+        $update.set();
+
+        for (var i = 0; i < randomIndex(data.length); i++) {
+            data.splice(randomIndex(data.length), 1);
+        }
+        for (var i = 0; i < 4; i++) {
+            data.insert(randomIndex(data.length), alphabet[randomIndex(alphabet.length)]);
+        }
+    }, 1500);
+
+    function randomIndex(length) {
+        return Math.floor(Math.random() * length);
+    }
+
+</script>

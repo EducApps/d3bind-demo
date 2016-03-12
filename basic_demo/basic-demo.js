@@ -46,6 +46,9 @@ function otherSelectorBindings(view) {
     view.append('div').classed('box', true).bindCall(model.$state, function(selection) {
         selection.classed('red', model.state);
     });
+    view.append('div').classed('box', true).bind(model.$state, function(state) {
+        this.classed('red', state);
+    });
     view.append('input').attr('type', 'checkbox').bindProperty('checked', model.$state);
 }
 
